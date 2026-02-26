@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicker Siege Multiplayer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CLICKER SIEGE</h1>
+            <div id="status-bar">
+                <span>Connecting...</span>
+            </div>
+        </header>
+
+        <main>
+            <section id="game-area">
+                <div id="player-card" class="glass-card">
+                    <h2 id="my-name">My Town</h2>
+                    <div class="stats-grid">
+                        <div class="stat">
+                            <span class="label">💰 Clicks</span>
+                            <span id="my-clicks" class="value">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">🛡️ Health</span>
+                            <div class="progress-container">
+                                <div id="my-health-bar" class="progress-bar"></div>
+                            </div>
+                            <span id="my-health" class="value">100%</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">⚔️ Army</span>
+                            <span id="my-army" class="value">0</span>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button id="click-btn" class="primary-btn">CLICK</button>
+                        <div class="btn-group">
+                            <button id="repair-btn" class="secondary-btn">REPAIR (10)</button>
+                            <button id="recruit-btn" class="secondary-btn">RECRUIT (25)</button>
+                        </div>
+                    </div>
+
+                    <div class="upgrades-section">
+                        <h3>Upgrades</h3>
+                        <div class="upgrade-buttons">
+                            <button id="upgrade-autoclick-btn" class="upgrade-btn">Auto-Clicker (Lv. 0)</button>
+                            <button id="upgrade-recruit-btn" class="upgrade-btn">Recruit Power (Lv. 1)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="map-card" class="glass-card">
+                    <h3>Battlefield Map</h3>
+                    <div id="game-map">
+                        <!-- Players will be shown as dots here -->
+                    </div>
+                </div>
+
+                <div id="log-container" class="glass-card">
+                    <h3>Battle Log</h3>
+                    <div id="battle-log"></div>
+                </div>
+            </section>
+
+            <section id="multiplayer-area">
+                <div class="glass-card">
+                    <h3>Other Players</h3>
+                    <div id="player-list">
+                        <!-- Players will be injected here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
