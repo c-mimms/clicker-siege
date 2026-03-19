@@ -1,0 +1,70 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_security_group" "game_sg" {
+  name        = "clicker_siege_sg_v3"
+  description = "Security group for the multiplayer clicker game"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023.*-x86_64"]
+  }
+}
+
+resource "aws_instance" "game_server" {
+  ami                  = data.aws_ami.amazon_linux.id
+  instance_type        = "t2.micro"
+  key_name             = "ec2_ssh"
+  vpc_security_group_ids = [aws_security_group.game_sg.id]
+
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              curl -sL https://rpm.nodesource.com/setup_20.x | bash -
+              yum install -y nodejs unzip
+              
+              mkdir -p /opt/app
+              cd /opt/app
+              curl -L -o app.zip "__PRESIGNED_URL__"
+              unzip app.zip
+              cd clicker-siege
+              npm install
+              npm install -g pm2
+              pm2 start server.js
+              EOF
+
+  tags = {
+    Name = "Clicker Siege Server"
+  }
+}
+
+output "game_url" {
+  value = "http://${aws_instance.game_server.public_ip}:3000"
+}
